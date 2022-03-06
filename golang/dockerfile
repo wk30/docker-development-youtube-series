@@ -1,25 +1,22 @@
-FROM golang:1.12.5-alpine3.9 as debug
+FROM golang:1.16 as debug
 
 # installing git
-RUN apk update && apk upgrade && \
-    apk add --no-cache git \
-        dpkg \
-        gcc \
-        git \
-        musl-dev
+# RUN apk update && apk upgrade && \
+#     apk add --no-cache git \
+#         dpkg \
+#         gcc \
+#         git \
+#         musl-dev
 
 ENV GOPATH /go
 ENV PATH $GOPATH/bin:/usr/local/go/bin:$PATH
-
-RUN go get github.com/sirupsen/logrus
-RUN go get github.com/buaazp/fasthttprouter
-RUN go get github.com/valyala/fasthttp
-RUN go get github.com/go-delve/delve/cmd/dlv
+ENV GOPROXY "https://goproxy.cn"
 
 WORKDIR /go/src/work
 COPY ./src /go/src/work/
-
+RUN pwd
 RUN go build -o app
+RUN go get github.com/go-delve/delve/cmd/dlv
 ### Run the Delve debugger ###
 COPY ./dlv.sh /
 RUN chmod +x /dlv.sh 

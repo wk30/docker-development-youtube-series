@@ -3,25 +3,27 @@ package main
 import (
 	"fmt" //to print messages to stdout
 	"log" //logging :)
+
 	//our web server that will host the mock
-	"github.com/buaazp/fasthttprouter" 
-	"github.com/valyala/fasthttp"
-	"os"
 	"io/ioutil"
+	"os"
+
+	"github.com/buaazp/fasthttprouter"
+	"github.com/valyala/fasthttp"
 )
 
 var configuration []byte
 var secret []byte
 
 func Response(ctx *fasthttp.RequestCtx) {
-	fmt.Fprintf(ctx, "Hello") 
+	fmt.Fprintf(ctx, "Hello")
 }
 
 func Status(ctx *fasthttp.RequestCtx) {
-	fmt.Fprintf(ctx, "ok") 
+	fmt.Fprintf(ctx, "ok")
 }
 
-func ReadConfig(){
+func ReadConfig() {
 	fmt.Println("reading config...")
 	config, e := ioutil.ReadFile("/configs/config.json")
 	if e != nil {
@@ -33,7 +35,7 @@ func ReadConfig(){
 
 }
 
-func ReadSecret(){
+func ReadSecret() {
 	fmt.Println("reading secret...")
 	s, e := ioutil.ReadFile("/secrets/secret.json")
 	if e != nil {
@@ -46,13 +48,12 @@ func ReadSecret(){
 }
 
 func main() {
-    
 	fmt.Println("starting...")
 	ReadConfig()
 	ReadSecret()
 	router := fasthttprouter.New()
 	router.GET("/", Response)
 	router.GET("/status", Status)
-	
+
 	log.Fatal(fasthttp.ListenAndServe(":5000", router.Handler))
 }

@@ -15,7 +15,7 @@ services:
     image: aimvector/golang:1.0.0
     build: 
       context: ./golang
-      target: prod
+      target: debug
     volumes:
     - ./golang/configs:/configs/
     - ./golang/secrets:/secrets/
